@@ -13,7 +13,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000, // You can change this to your preferred port
+    port: 5173, // You can change this to your preferred port
     open: true, // Automatically open the app in the browser on server start
     proxy: {
       '/api': {
