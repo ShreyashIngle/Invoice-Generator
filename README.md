@@ -9,8 +9,7 @@ A full-stack invoice generation application built with React, TypeScript, Node.j
 4. [Frontend Setup](#frontend-setup)
 5. [Features](#features)
 6. [Development Guidelines](#development-guidelines)
-7. [API Documentation](#api-documentation)
-8. [Building for Production](#building-for-production)
+7. [Building for Production](#building-for-production)
 
 ## Prerequisites
 
@@ -137,12 +136,7 @@ npm run dev
 npm install
 ```
 
-3. Create `.env` file:
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-4. Start development server:
+3. Start development server:
 ```bash
 npm run dev
 ```
@@ -255,6 +249,3 @@ npm run build
 - `npm run build`: Production build
 - `npm run lint`: ESLint check
 - `npm run preview`: Preview build
-
-## License
-ISC
