@@ -44,9 +44,7 @@ export const Login = () => {
         <div className="w-1/2 p-12 mt-20 z-10"> {/* Match Register form container */}
           <div className="max-w-md mx-auto">
             <h2 className="text-4xl font-bold text-white mb-4">Let the Journey Begin!</h2>
-            <p className="text-gray-400 mb-8">
-              This is basic login page which is used for levitation assignment purpose.
-            </p>
+           
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-white mb-2">Email Address</label>
@@ -58,9 +56,7 @@ export const Login = () => {
                   placeholder="Enter Email ID"
                   required
                 />
-                <p className="text-gray-400 text-sm mt-1">
-                  This email will be displayed with your inquiry
-                </p>
+               
               </div>
               <div>
                 <label className="block text-white mb-2">Current Password</label>
