@@ -5,7 +5,8 @@ import path from 'path';
 import fs from 'fs';
 import { IPopulatedProduct } from '../models/Product'; 
 
-const logopdf = fs.readFileSync(path.resolve(__dirname, '../services/logopdf.png')).toString('base64');
+const logopdfPath = path.join(__dirname, '../services/logopdf.png');
+const logopdf = fs.readFileSync(logopdfPath).toString('base64');
 
 export const generatePDF = async (invoice: IInvoice): Promise<Buffer> => {
   // Populate user reference first
