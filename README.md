@@ -2,7 +2,7 @@
 
 A full-stack invoice generation application built with React, TypeScript, Node.js, and MongoDB.
 
-## Project Structure
+## Project Structure for backend
 
 ```
 invoice-generator/
@@ -65,10 +65,8 @@ npm install
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/invoice-generator
 JWT_SECRET=your_jwt_secret_key
-SMTP_HOST=your_smtp_host
-SMTP_PORT=your_smtp_port
-SMTP_USER=your_smtp_email
-SMTP_PASS=your_smtp_password
+EMAIL_USER=your_smtp_email
+EMAIL_PASS=your_smtp_password
 ```
 
 4. Build the TypeScript code:
@@ -82,27 +80,6 @@ npm run dev
 ```
 
 The backend server will start running on `http://localhost:5000`
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - User login
-- `POST /api/auth/forgot-password` - Request password reset
-
-### Invoices
-- `GET /api/invoices` - Get all invoices
-- `POST /api/invoices` - Create new invoice
-- `GET /api/invoices/:id` - Get single invoice
-- `PUT /api/invoices/:id` - Update invoice
-- `DELETE /api/invoices/:id` - Delete invoice
-
-### Products
-- `GET /api/products` - Get all products
-- `POST /api/products` - Create new product
-- `GET /api/products/:id` - Get single product
-- `PUT /api/products/:id` - Update product
-- `DELETE /api/products/:id` - Delete product
 
 ## Key Features
 
@@ -168,12 +145,10 @@ The backend server will start running on `http://localhost:5000`
 Ensure all environment variables are properly configured in the `.env` file:
 ```env
 PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-SMTP_HOST=your_smtp_host
-SMTP_PORT=your_smtp_port
-SMTP_USER=your_smtp_email
-SMTP_PASS=your_smtp_password
+MONGODB_URI=mongodb://localhost:27017/invoice-generator
+JWT_SECRET=your_jwt_secret_key
+EMAIL_USER=your_smtp_email
+EMAIL_PASS=your_smtp_password
 ```
 
 ## Error Handling
@@ -189,18 +164,11 @@ SMTP_PASS=your_smtp_password
 - CORS configuration
 - Environment variable protection
 
-# Invoice Generator
 
-A full-stack invoice generation application built with React, TypeScript, Node.js, and MongoDB.
-
-## Project Structure
+## Project Structure for frontend
 
 ```
 invoice-generator/
-├── backend/                 # Node.js backend
-│   └── [Backend structure as previously described]
-│
-├── frontend/
 │   ├── src/
 │   │   ├── assets/         # Static assets
 │   │   │   ├── logo.png
@@ -238,22 +206,14 @@ invoice-generator/
 
 ## Frontend Setup
 
-1. Navigate to the frontend directory:
-```bash
-cd frontend
-```
+1. Navigate to the root directory:
 
 2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Create a `.env` file in the frontend directory:
-```env
-VITE_API_URL=http://localhost:5000/api
-```
-
-4. Start the development server:
+3. Start the development server:
 ```bash
 npm run dev
 ```
@@ -405,6 +365,3 @@ npm run typescript
 ```bash
 npm run lint
 ```
-
-## License
-ISC
