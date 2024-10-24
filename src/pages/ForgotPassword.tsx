@@ -1,23 +1,59 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { forgotPassword } from '../store/slices/authSlice';
+import { forgotPassword, resetPassword, verifyOTP } from '../store/slices/authSlice';
 import { Logo } from '../components/Logo';
 import { AppDispatch } from '../store';
 import { toast } from 'react-toastify';
 import main from '../assets/main.png';
+import { useNavigate } from 'react-router-dom';
 
 
 export const ForgotPassword = () => {
   const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await dispatch(forgotPassword(email)).unwrap();
-      toast.success('Reset password link has been sent to your email');
+      setOtpSent(true);
+      toast.success('OTP sent to your email');
     } catch (error) {
-      toast.error('Failed to send reset password link');
+      toast.error('Failed to send OTP');
+    }
+  };
+
+  const handleVerifyOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await dispatch(verifyOTP({ email, otp })).unwrap();
+      setOtpVerified(true);
+      toast.success('OTP verified successfully');
+    } catch (error) {
+      toast.error('Invalid OTP');
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
+
+    try {
+      await dispatch(resetPassword({ email, otp, password: newPassword })).unwrap();
+      toast.success('Password reset successfully');
+      navigate('/login');
+    } catch (error) {
+      toast.error('Failed to reset password');
     }
   };
 
@@ -40,34 +76,89 @@ export const ForgotPassword = () => {
         </div>
         <div className="w-1/2 p-12 mt-20 z-10">
           <div className="max-w-md mx-auto">
-            <h2 className="text-4xl font-bold text-white mb-4">Forgot Password</h2>
-            <p className="text-gray-400 mb-8">
-              Enter your email address and we'll send you a link to reset your password.
-            </p>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-white mb-2">Email Address</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-3 rounded bg-[#2A2A2A] text-white border border-gray-700 focus:outline-none focus:border-[#B6F09C] focus:ring-1 focus:ring-[#B6F09C]"
-                  placeholder="Enter Email ID"
-                  required
-                />
-              </div>
-              <div className="flex items-center gap-4">
+            <h2 className="text-4xl font-bold text-white mb-4">Reset Password</h2>
+            
+            {!otpSent ? (
+              // Step 1: Enter Email
+              <form onSubmit={handleSendOTP} className="space-y-6">
+                <div>
+                  <label className="block text-white mb-2">Email Address</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full p-3 rounded bg-[#2A2A2A] text-white border border-gray-700 focus:outline-none focus:border-[#B6F09C]"
+                    placeholder="Enter your email"
+                    required
+                  />
+                </div>
                 <button
                   type="submit"
                   className="px-6 py-3 bg-[#2A2A2A] text-[#B6F09C] rounded hover:bg-[#3A3A3A] transition-colors"
                 >
-                  Send Reset Link
+                  Send OTP
                 </button>
-                <a href="/login" className="text-gray-400 hover:text-white">
-                  Back to login
-                </a>
-              </div>
-            </form>
+              </form>
+            ) : !otpVerified ? (
+              // Step 2: Enter OTP
+              <form onSubmit={handleVerifyOTP} className="space-y-6">
+                <div>
+                  <label className="block text-white mb-2">Enter OTP</label>
+                  <input
+                    type="text"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    className="w-full p-3 rounded bg-[#2A2A2A] text-white border border-gray-700 focus:outline-none focus:border-[#B6F09C]"
+                    placeholder="Enter OTP"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-[#2A2A2A] text-[#B6F09C] rounded hover:bg-[#3A3A3A] transition-colors"
+                >
+                  Verify OTP
+                </button>
+              </form>
+            ) : (
+              // Step 3: Enter New Password
+              <form onSubmit={handleResetPassword} className="space-y-6">
+                <div>
+                  <label className="block text-white mb-2">New Password</label>
+                  <input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className="w-full p-3 rounded bg-[#2A2A2A] text-white border border-gray-700 focus:outline-none focus:border-[#B6F09C]"
+                    placeholder="Enter new password"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-white mb-2">Confirm Password</label>
+                  <input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full p-3 rounded bg-[#2A2A2A] text-white border border-gray-700 focus:outline-none focus:border-[#B6F09C]"
+                    placeholder="Confirm new password"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-[#2A2A2A] text-[#B6F09C] rounded hover:bg-[#3A3A3A] transition-colors"
+                >
+                  Reset Password
+                </button>
+              </form>
+            )}
+            
+            <div className="mt-4">
+              <a href="/login" className="text-gray-400 hover:text-white">
+                Back to login
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -115,7 +115,7 @@ export const generatePDF = async (invoice: IInvoice): Promise<Buffer> => {
         </div>
         <div style="display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid #A2A2A2;">
           <span style="font-size: 16px; font-weight: 600; color: #1A1A1A;">Total Amount</span>
-          <span style="font-size: 16px; font-weight: 600; color: #165FE3;">$${totalAmount.toFixed(2)}</span>
+          <span style="font-size: 16px; font-weight: 600; color: #165FE3;">₹${totalAmount.toFixed(2)}</span>
         </div>
         </div>
         <div>

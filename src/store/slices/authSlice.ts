@@ -138,19 +138,19 @@ interface LoginData {
   password: string;
 }
 
-interface ResetPasswordData {
-  token: string;
-  password: string;
-  confirmPassword: string;
+interface ResetPasswordState {
+  email: string;
+  otpVerified: boolean;
 }
 
-const initialState: AuthState = {
+const initialState: AuthState & ResetPasswordState = {
   user: null,
   token: localStorage.getItem('token'),
   isLoading: false,
   error: null,
+  email: '',
+  otpVerified: false,
 };
-
 // Helper function to handle API errors
 const handleApiError = (error: unknown) => {
   if (axios.isAxiosError(error)) {
@@ -195,7 +195,7 @@ export const forgotPassword = createAsyncThunk(
   'auth/forgotPassword',
   async (email: string, { rejectWithValue }) => {
     try {
-      const response = await axios.post<{ message: string }>(
+      const response = await axios.post(
         'http://localhost:5000/api/password/forgot',
         { email }
       );
@@ -206,32 +206,35 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
-// Update the resetPassword thunk to include confirmPassword
-export const resetPassword = createAsyncThunk(
-  'auth/resetPassword',
-  async ({ token, password, confirmPassword }: ResetPasswordData, { rejectWithValue }) => {
+export const verifyOTP = createAsyncThunk(
+  'auth/verifyOTP',
+  async ({ email, otp }: { email: string; otp: string }, { rejectWithValue }) => {
     try {
-      if (password !== confirmPassword) {
-        return rejectWithValue('Passwords do not match');
-      }
-
       const response = await axios.post(
-        `http://localhost:5000/api/password/reset/${token}`,
-        { 
-          password,
-          confirmPassword
-        }
+        'http://localhost:5000/api/password/verify-otp',
+        { email, otp }
       );
       return response.data;
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return rejectWithValue(error.response?.data?.message || 'Failed to reset password');
-      }
-      return rejectWithValue('An unexpected error occurred');
+      return rejectWithValue(handleApiError(error));
     }
   }
 );
 
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  async ({ email, otp, password }: { email: string; otp: string; password: string }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/api/password/reset',
+        { email, otp, password }
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(handleApiError(error));
+    }
+  }
+);
 const authSlice = createSlice({
   name: 'auth',
   initialState,
