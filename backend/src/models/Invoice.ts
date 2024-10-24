@@ -19,7 +19,11 @@
 
 
 import mongoose, { Document, Schema } from 'mongoose';
-
+import { IPopulatedProduct } from './Product'; 
+export interface IUser {
+  name: string;
+  email: string;
+}
 // Define the IProduct interface
 interface IProduct {
   productId: mongoose.Types.ObjectId; // Reference to Product model
@@ -31,8 +35,8 @@ interface IProduct {
 
 // Define the IInvoice interface extending Document
 export interface IInvoice extends Document {
-  user: mongoose.Types.ObjectId; // Reference to User model
-  products: IProduct[]; // Array of products in the invoice
+  user: IUser; // Add user details
+  products: IPopulatedProduct[];
   date: Date; // Date of invoice creation
   totalAmount: number; // Total amount of the invoice including GST
 }
@@ -48,9 +52,9 @@ const ProductSchema: Schema = new Schema({
 
 // Define Invoice Schema
 const InvoiceSchema: Schema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // Reference to User
-  products: { type: [ProductSchema], required: true }, // Array of products
-  date: { type: Date, default: Date.now }, // Default date is now
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  products: [ProductSchema], // Change this line
+  date: { type: Date, required: true, default: Date.now }, // Default date is now
   totalAmount: { type: Number, required: true } // Total invoice amount
 });
 

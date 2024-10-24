@@ -3,12 +3,15 @@ import puppeteer from 'puppeteer';
 import { IInvoice } from '../models/Invoice';
 import path from 'path';
 import fs from 'fs';
+import { IPopulatedProduct } from '../models/Product'; 
 
 const logopdf = fs.readFileSync(path.resolve(__dirname, '../services/logopdf.png')).toString('base64');
 
 export const generatePDF = async (invoice: IInvoice): Promise<Buffer> => {
   // Populate user reference first
-  const populatedInvoice = await invoice.populate<{ user: { name: string; email: string } }>('user');
+  const populatedInvoice = await invoice
+  .populate<{ user: { name: string; email: string }; products: IPopulatedProduct[] }>('user')
+  
   
   // Now populate the products
   await populatedInvoice.populate('products.productId');
@@ -18,7 +21,7 @@ export const generatePDF = async (invoice: IInvoice): Promise<Buffer> => {
 
   const productRows = populatedInvoice.products.map((product) => `
     <tr style="border-bottom: 1px solid #f0f0f0;">
-      <td style="padding: 12px 16px; color: #4A5568; font-size: 14px;">${product.productId.name}</td>
+    <td style="padding: 12px 16px; color: #4A5568; font-size: 14px;">${(product.productId as unknown as { name: string }).name}</td>
       <td style="padding: 12px 16px; color: #4A5568; font-size: 14px; text-align: center;">${product.quantity}</td>
       <td style="padding: 12px 16px; color: #4A5568; font-size: 14px; text-align: center;">${product.rate}</td>
       <td style="padding: 12px 16px; color: #4A5568; font-size: 14px; text-align: right;">USD ${product.total}</td>

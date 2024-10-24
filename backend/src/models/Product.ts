@@ -19,6 +19,8 @@
 // export default mongoose.model<IProduct>('Product', productSchema);
 
 // models/Product.ts
+
+
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IProduct extends Document {
@@ -29,6 +31,12 @@ export interface IProduct extends Document {
   gst: number;
 }
 
+// New interface for populated product
+export interface IPopulatedProduct extends IProduct {
+  productId: {
+    name: string; // Include additional fields if needed
+  } & mongoose.Types.ObjectId;
+}
 const productSchema = new Schema<IProduct>({
   name: { type: String, required: true },
   quantity: { type: Number, required: true },
