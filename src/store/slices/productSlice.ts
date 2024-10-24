@@ -9,6 +9,17 @@ const initialState: ProductState = {
   error: null,
 };
 
+// Helper function to download the PDF blob
+const downloadBlob = (data: Blob, filename: string) => {
+  const url = window.URL.createObjectURL(data);
+  const link = document.createElement('a');
+  link.href = url;
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+};
+
 // Async thunk to add a product
 export const addProduct = createAsyncThunk(
   'product/add',
@@ -20,12 +31,14 @@ export const addProduct = createAsyncThunk(
       throw new Error('Authorization token is missing');
     }
 
-   
-
     try {
-      const response = await axios.post('https://invoice-generator-kz6p.onrender.com/api/products', product, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.post(
+        'https://invoice-generator-kz6p.onrender.com/api/products',
+        product,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       return response.data;
     } catch (error) {
       // Check if the error is an Axios error
@@ -63,13 +76,8 @@ export const generateInvoice = createAsyncThunk(
         }
       );
 
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'invoice.pdf');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      // Use the helper function to handle the PDF download
+      downloadBlob(response.data, 'invoice.pdf');
     } catch (error) {
       if (axios.isAxiosError(error)) {
         throw new Error(error.response?.data?.message || 'Failed to generate invoice');
