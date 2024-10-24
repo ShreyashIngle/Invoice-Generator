@@ -23,7 +23,7 @@ export const addProduct = createAsyncThunk(
    
 
     try {
-      const response = await axios.post('http://localhost:5000/api/products', product, {
+      const response = await axios.post('https://invoice-generator-kz6p.onrender.com/api/products', product, {
         headers: { Authorization: `Bearer ${token}` },
       });
       return response.data;
@@ -52,7 +52,7 @@ export const generateInvoice = createAsyncThunk(
 
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/invoices',
+        'https://invoice-generator-kz6p.onrender.com/api/invoices',
         { products },
         {
           headers: {
