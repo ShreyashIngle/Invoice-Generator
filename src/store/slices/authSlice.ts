@@ -166,7 +166,7 @@ export const register = createAsyncThunk(
   async (userData: RegisterData, { rejectWithValue }) => {
     try {
       const response = await axios.post<LoginResponse>(
-        'http://localhost:5000/api/auth/register',
+        'https://invoice-generator-kz6p.onrender.com/api/auth/register',
         userData
       );
       return response.data;
@@ -181,7 +181,7 @@ export const login = createAsyncThunk(
   async (credentials: LoginData, { rejectWithValue }) => {
     try {
       const response = await axios.post<LoginResponse>(
-        'http://localhost:5000/api/auth/login',
+        'https://invoice-generator-kz6p.onrender.com/api/auth/login',
         credentials
       );
       return response.data;
@@ -196,7 +196,7 @@ export const forgotPassword = createAsyncThunk(
   async (email: string, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/password/forgot',
+        'https://invoice-generator-kz6p.onrender.com/api/password/forgot',
         { email }
       );
       return response.data;
@@ -211,7 +211,7 @@ export const verifyOTP = createAsyncThunk(
   async ({ email, otp }: { email: string; otp: string }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/password/verify-otp',
+        'https://invoice-generator-kz6p.onrender.com/api/password/verify-otp',
         { email, otp }
       );
       return response.data;
@@ -226,7 +226,7 @@ export const resetPassword = createAsyncThunk(
   async ({ email, otp, password }: { email: string; otp: string; password: string }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        'http://localhost:5000/api/password/reset',
+        'https://invoice-generator-kz6p.onrender.com/api/password/reset',
         { email, otp, password }
       );
       return response.data;
