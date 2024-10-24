@@ -12,11 +12,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Use CORS middleware
+const allowedOrigins = [
+  'http://localhost:5173', // Development origin
+  'https://invoice-generator-frontend-q6jh.onrender.com', // Production origin
+];
+
 app.use(cors({
-    origin: 'http://localhost:5173', // Allow requests from this origin
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
-    credentials: true // Allow credentials (if needed)
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Specify allowed methods
+  credentials: true, // Allow credentials if needed
 }));
 
 app.use(express.json());
